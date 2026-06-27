@@ -1,0 +1,28 @@
+# rahgozar Netlify Relay — configuration
+#
+# Deploy this function to Netlify and configure the environment
+# variables below via the Netlify dashboard or CLI.
+#
+#   netlify deploy --build --prod
+#
+# The function lives at:
+#   https://<your-site>.netlify.app/.netlify/functions/relay
+#
+# To get a cleaner URL, add a redirect below (uncomment and adjust).
+
+[build]
+  functions = "netlify/functions"
+
+# Optional: redirect /relay → function URL for a cleaner endpoint
+# [[redirects]]
+#   from = "/relay"
+#   to = "/.netlify/functions/relay"
+#   status = 200
+#   force = true
+
+# Optional: redirect /relay/* → function URL with path preserved
+# [[redirects]]
+#   from = "/relay/*"
+#   to = "/.netlify/functions/relay"
+#   status = 200
+#   force = true

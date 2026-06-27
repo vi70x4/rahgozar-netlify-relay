@@ -1,0 +1,19 @@
+{
+  "name": "rahgozar-netlify-relay",
+  "version": "1.0.0",
+  "description": "Netlify Function port of rahgozar's Google Apps Script relay (Code.gs) — bypass DPI/SNI blocking using your own Google account via Netlify's serverless edge",
+  "private": true,
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "rahgozar",
+    "netlify",
+    "netlify-functions",
+    "dpi-bypass",
+    "proxy",
+    "relay"
+  ]
+}

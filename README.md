@@ -47,66 +47,59 @@ Where:
 ## Prerequisites
 
 - A [Netlify](https://www.netlify.com/) account (free tier works)
+- This repo forked / cloned to your GitHub account
 - [Netlify CLI](https://docs.netlify.com/cli/get-started/) (optional, for local dev)
 - Node.js 18+ (for local testing)
 
 ## Deployment
 
-### 1. Create the project structure
+### Deploy from Netlify Dashboard (easiest — no CLI needed)
 
-```bash
-mkdir rahgozar-netlify-relay && cd rahgozar-netlify-relay
-mkdir -p netlify/functions
-```
+1. Go to **https://app.netlify.com/start**
+2. Click **Import existing project** → **GitHub**
+3. Authorize Netlify to access your repos if prompted
+4. Search and select `vi70x4/rahgozar-netlify-relay` (or your fork)
+5. Configure deploy settings — Netlify auto-detects everything from `netlify.toml`:
+   - **Branch to deploy**: `main`
+   - **Build command**: leave blank or `exit 0`
+   - **Publish directory**: `.`
+6. Click **Show advanced** → **Environment variables** → **Add variable** and set:
 
-Copy the `netlify/functions/relay.js` file from this repo into your project.
+   | Variable | Required | Value |
+   |---|---|---|
+   | `AUTH_KEY` | **Yes** | Your secret (must match `auth_key` in rahgozar `config.json`). Generate one with `openssl rand -hex 32`. |
+   | `CACHE_TTL_MS` | No | `60000` for 60s in-memory caching (optional) |
+   | `QUOTA_CEILING` | No | What the `op: "quota"` probe reports (default `100000`) |
 
-### 2. Configure environment variables
+7. Click **Deploy**
 
-Set these in the **Netlify dashboard** (Site settings → Environment variables) or via `.env` + Netlify CLI:
-
-| Variable | Required | Description |
-|---|---|---|
-| `AUTH_KEY` | **Yes** | Shared secret. Must match `auth_key` in rahgozar `config.json`. Generate with `openssl rand -hex 32`. |
-| `DIAGNOSTIC_MODE` | No | Set to `true` during setup to see JSON errors instead of decoy HTML |
-| `QUOTA_CEILING` | No | What `op: "quota"` reports (default `100000`) |
-| `CACHE_TTL_MS` | No | In-memory response cache TTL in ms (default `0` — disabled) |
-
-### 3. Deploy via Git
-
-```bash
-# Initialize git repo
-git init
-git add .
-git commit -m "Initial commit: rahgozar Netlify relay"
-
-# Create a new site on Netlify
-# Option A: Netlify CLI
-netlify deploy --prod --build
-
-# Option B: Push to GitHub and connect to Netlify
-# https://app.netlify.com/start
-```
-
-### 4. Find your function URL
-
-After deployment, your function will be at:
+Netlify deploys the function in ~30 seconds. Your relay is immediately live at:
 
 ```
 https://<your-site>.netlify.app/.netlify/functions/relay
 ```
 
-For a cleaner URL, add a redirect in `netlify.toml`:
+For a cleaner URL, uncomment the `[[redirects]]` block in `netlify.toml` and redeploy. Then you can use:
 
-```toml
-[[redirects]]
-  from = "/relay"
-  to = "/.netlify/functions/relay"
-  status = 200
-  force = true
+```
+https://<your-site>.netlify.app/relay
 ```
 
-Then use `https://<your-site>.netlify.app/relay`.
+### Deploy via Netlify CLI
+
+```bash
+# Install CLI
+npm install -g netlify-cli
+
+# Clone the repo
+git clone https://github.com/vi70x4/rahgozar-netlify-relay.git
+cd rahgozar-netlify-relay
+
+# Deploy
+netlify deploy --prod --build
+```
+
+You'll be prompted to log in and create a new site. Then set `AUTH_KEY` and other variables in the Netlify dashboard (Site settings → Environment variables).
 
 ## Connecting rahgozar
 
